@@ -1,29 +1,21 @@
 <?php 
 
-// in Pokemon.php
-require 'EnergyType.php';
-require 'Resistance.php';
-require 'Weakness.php';
+// in index.php
+$pokemon1 = new Pokemon("john"); 
+echo 'pokemon1 energy type: ' . $pokemon1->energyType->name;
+echo "<br>";
+echo 'pokemon1 resistance: ' . $pokemon1->resistance->energyType . ' ' . $pokemon1->resistance->value;
+echo "<br>";
+echo 'pokemon1 weakness: ' . $pokemon1->weakness->energyType . ' ' . $pokemon1->weakness->multiplier;
+echo "<br>";
 
-class Pokemon {
-    public $name; 
-    public $health;
-    public $energyType;
-    public $attacks; 
-    public $resistance;
-    public $weakness;
-
-    function __construct($newName) { 
-        $this->name = $newName; 
-        $this->health = 100;
-        $this->energyType = new EnergyType("Normal");
-        $this->attacks = array(new Attack("Default Attack 1", 10), new Attack("Default Attack 2", 20)); 
-        $this->resistance = new Resistance("Normal", 20);
-        $this->weakness = new Weakness("Fire", 2.0);
-    }
-
-    // Rest of the Pokemon class...
-}
+$pokemon2 = new Pikachu("evelyn"); 
+echo 'pokemon2 energy type: ' . $pokemon2->energyType->name;
+echo "<br>";
+echo 'pokemon2 resistance: ' . $pokemon2->resistance->energyType . ' ' . $pokemon2->resistance->value;
+echo "<br>";
+echo 'pokemon2 weakness: ' . $pokemon2->weakness->energyType . ' ' . $pokemon2->weakness->multiplier;
+echo "<br>";
 
 
 
