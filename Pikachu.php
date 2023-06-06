@@ -1,19 +1,24 @@
 <?php
 
+// in Pikachu.php
+require 'EnergyType.php';
+require 'Resistance.php';
+require 'Weakness.php';
+
 class Pikachu extends Pokemon {
 
     function __construct($newName) {
-        $this->name = $newName;
-        $this->health = 100;
-        $this->energyType = "Fire";
+        parent::__construct($newName); 
+        $this->energyType = new EnergyType("Electric");
+        $this->attacks = array(new Attack("Electric Ring", 50), new Attack("Pika Punch", 20));
+        $this->resistance = new Resistance("Normal", 20);
+        $this->weakness = new Weakness("Ground", 2.0);
     }
 
-    function __toString() {
-       return "I am a Pikachu."; 
-    }
+    // Rest of the Pikachu class...
+}
 
 
-};
 
 
 ?>
