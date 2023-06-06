@@ -1,23 +1,30 @@
 <?php 
 
-require 'Pokemon.php';
-require 'Pikachu.php';
+// in Pokemon.php
+require 'EnergyType.php';
+require 'Resistance.php';
+require 'Weakness.php';
 
-$pokemon1 = new Pokemon("john"); 
-$pokemon2 = new Pikachu("evelyn"); 
+class Pokemon {
+    public $name; 
+    public $health;
+    public $energyType;
+    public $attacks; 
+    public $resistance;
+    public $weakness;
 
-echo $pokemon1;
-echo "<br>";
-echo $pokemon2;
-echo "<br>";
+    function __construct($newName) { 
+        $this->name = $newName; 
+        $this->health = 100;
+        $this->energyType = new EnergyType("Normal");
+        $this->attacks = array(new Attack("Default Attack 1", 10), new Attack("Default Attack 2", 20)); 
+        $this->resistance = new Resistance("Normal", 20);
+        $this->weakness = new Weakness("Fire", 2.0);
+    }
 
-echo 'pokemon1->name has value: ' . $pokemon1->name;
-echo "<br>";
-echo 'pokemon2->name has value: ' . $pokemon2->name;
-echo "<br>";
-echo 'pokemon2 has value: ' . print_r($pokemon2);
-echo "<br>";
+    // Rest of the Pokemon class...
+}
 
-$pokemon1->Attack($pokemon2, 50);
+
 
 ?>
