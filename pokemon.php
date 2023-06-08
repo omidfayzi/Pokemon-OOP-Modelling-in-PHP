@@ -1,31 +1,60 @@
 <?php
+// Pokemon.php
+class Pokemon
+{
+    protected $name;
+    protected $lifePoints;
+    protected $maxLifePoints;
+    protected $energyType;
+    protected $weakness;
+    protected $resistance;
+    protected $attacks;
 
-class Pokemon {
-    public $name;       // for example: John
-    public $health;     // for example: 100
-    public $energyType;  
-
-    function __construct($newName) {
-        $this->name = $newName;
-        $this->health = 100;
+    public function __construct($name, $lifePoints, $energyType, $weakness, $resistance, $attacks)
+    {
+        $this->name = $name;
+        $this->lifePoints = $lifePoints;
+        $this->maxLifePoints = $lifePoints;
+        $this->energyType = $energyType;
+        $this->weakness = $weakness;
+        $this->resistance = $resistance;
+        $this->attacks = $attacks;
     }
 
-    function Attack($targetObject, $attackAmount) {
-        $targetName = $targetObject->name;
-        echo "<br>";
-        echo $this->name . " attacks " . $targetName . " (health:" . $targetObject->health. ")";
-        echo "<br>";
-        $targetObject->health = $targetObject->health - $attackAmount;
-        echo $targetName . " health is now: " . $targetObject->health;
-        
+    public function getName() { return $this->name; }
+    public function getLifePoints() { return $this->lifePoints; }
+    public function getEnergyType() { return $this->energyType->getName(); }
+    public function getWeakness() { return $this->weakness->getEnergyType()." ".$this->weakness->getMultiplier(); }
+    public function getResistance() { return $this->resistance->getEnergyType()." ".$this->resistance->getValue(); }
+    public function getAttacks() { return $this->attacks; }
+
+    public function attack($attack, $target) {
+        echo $this->name . " attacked " . $target->getName() . " and dealt " . $attack->getDamage() . " damage <br>";
+        $target->takeDamage($attack, $this->energyType);
     }
 
-    function __toString() {
-        return "I am a Pokemon."; 
-     }
+    public function takeDamage($attack, $energyType) {
+        $damage = $attack->getDamage();
+        if ($energyType->getName() == $this->weakness->getEnergyType()) {
+            $damage *= $this->weakness->getMultiplier();
+        }
+        if ($energyType->getName() == $this->resistance->getEnergyType()) {
+            $damage -= $this->resistance->getValue();
+        }
+        $this->lifePoints -= $damage;
+        if ($this->lifePoints < 0) {
+            $this->lifePoints = 0;
+        }
+        echo $this->name . " has " . $this->lifePoints . " health left <br>";
+    }
 
+    public function printStats() {
+        $attacksNames = array_map(function($attack) { return $attack->getName() . " " . $attack->getDamage(); }, $this->attacks);
+        echo "Name: " . $this->name . "<br>";
+        echo "Health: " . $this->lifePoints . "/" . $this->maxLifePoints . "<br>";
+        echo "Weakness: " . $this->getWeakness() . "<br>";
+        echo "Resistance: " . $this->getResistance() . "<br>";
+        echo "Attack(s): " . implode(", ", $attacksNames) . "<br><br>";
+    }
+}
 
-};
-
-
-?>

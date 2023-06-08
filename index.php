@@ -1,22 +1,16 @@
-<?php 
+<?php
 
-// in index.php
-$pokemon1 = new Pokemon("john"); 
-echo 'pokemon1 energy type: ' . $pokemon1->energyType->name;
-echo "<br>";
-echo 'pokemon1 resistance: ' . $pokemon1->resistance->energyType . ' ' . $pokemon1->resistance->value;
-echo "<br>";
-echo 'pokemon1 weakness: ' . $pokemon1->weakness->energyType . ' ' . $pokemon1->weakness->multiplier;
-echo "<br>";
+require_once 'Pikachu.php';
+require_once 'Charmeleon.php';
 
-$pokemon2 = new Pikachu("evelyn"); 
-echo 'pokemon2 energy type: ' . $pokemon2->energyType->name;
-echo "<br>";
-echo 'pokemon2 resistance: ' . $pokemon2->resistance->energyType . ' ' . $pokemon2->resistance->value;
-echo "<br>";
-echo 'pokemon2 weakness: ' . $pokemon2->weakness->energyType . ' ' . $pokemon2->weakness->multiplier;
-echo "<br>";
+$pikachu = new Pikachu('Pikachu');
+$charmeleon = new Charmeleon('Charmeleon');
 
+$pikachu->printStats();
+$charmeleon->printStats();
 
+$pikachu->attack($pikachu->getAttacks()[0], $charmeleon);
+$charmeleon->attack($charmeleon->getAttacks()[0], $pikachu);
 
+echo "Number of pokemons alive: 2";
 ?>
