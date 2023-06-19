@@ -1,60 +1,87 @@
 <?php
-// Pokemon.php
+
 class Pokemon
 {
-    protected $name;
-    protected $lifePoints;
-    protected $maxLifePoints;
-    protected $energyType;
-    protected $weakness;
-    protected $resistance;
-    protected $attacks;
+    public static $population = 0;
+    public static $livingPokemon = [];
+    public $name;
+    public $energyType;
+    public $hitpoints;
+    public $health;
+    public $attacks;
+    public $weakness;
+    public $resistance;
 
-    public function __construct($name, $lifePoints, $energyType, $weakness, $resistance, $attacks)
+    public function __construct($name, $energyType, $hitpoints, $attacks, $weakness, $resistance)
     {
         $this->name = $name;
-        $this->lifePoints = $lifePoints;
-        $this->maxLifePoints = $lifePoints;
         $this->energyType = $energyType;
+        $this->hitpoints = $hitpoints;
+        $this->health = $hitpoints;
+        $this->attacks = $attacks;
         $this->weakness = $weakness;
         $this->resistance = $resistance;
-        $this->attacks = $attacks;
+        Pokemon::$population += 1;
+        array_push(Pokemon::$livingPokemon, $this);
     }
 
-    public function getName() { return $this->name; }
-    public function getLifePoints() { return $this->lifePoints; }
-    public function getEnergyType() { return $this->energyType->getName(); }
-    public function getWeakness() { return $this->weakness->getEnergyType()." ".$this->weakness->getMultiplier(); }
-    public function getResistance() { return $this->resistance->getEnergyType()." ".$this->resistance->getValue(); }
-    public function getAttacks() { return $this->attacks; }
-
-    public function attack($attack, $target) {
-        echo $this->name . " attacked " . $target->getName() . " and dealt " . $attack->getDamage() . " damage <br>";
-        $target->takeDamage($attack, $this->energyType);
+    public function attack($target, $attack)
+    {
+        $damage = $attack->damage;
+        if ($target->weakness->energyType == $this->energyType)
+        {
+            $damage *= $target->weakness->multiplier;
+        }
+        if ($target->resistance->energyType == $this->energyType)
+        {
+            $damage -= $target->resistance->value;
+        }
+        $target->health -= $damage;
+        if ($target->health <= 0)
+        {
+            Pokemon::$population -= 1;
+        }
     }
 
-    public function takeDamage($attack, $energyType) {
-        $damage = $attack->getDamage();
-        if ($energyType->getName() == $this->weakness->getEnergyType()) {
-            $damage *= $this->weakness->getMultiplier();
-        }
-        if ($energyType->getName() == $this->resistance->getEnergyType()) {
-            $damage -= $this->resistance->getValue();
-        }
-        $this->lifePoints -= $damage;
-        if ($this->lifePoints < 0) {
-            $this->lifePoints = 0;
-        }
-        echo $this->name . " has " . $this->lifePoints . " health left <br>";
-    }
-
-    public function printStats() {
-        $attacksNames = array_map(function($attack) { return $attack->getName() . " " . $attack->getDamage(); }, $this->attacks);
-        echo "Name: " . $this->name . "<br>";
-        echo "Health: " . $this->lifePoints . "/" . $this->maxLifePoints . "<br>";
-        echo "Weakness: " . $this->getWeakness() . "<br>";
-        echo "Resistance: " . $this->getResistance() . "<br>";
-        echo "Attack(s): " . implode(", ", $attacksNames) . "<br><br>";
+    public static function getPopulation()
+    {
+        return Pokemon::$population;
     }
 }
 
+class Attack
+{
+    public $name;
+    public $damage;
+
+    public function __construct($name, $damage)
+    {
+        $this->name = $name;
+        $this->damage = $damage;
+    }
+}
+
+class Weakness
+{
+    public $energyType;
+    public $multiplier;
+
+    public function __construct($energyType, $multiplier)
+    {
+        $this->energyType = $energyType;
+        $this->multiplier = $multiplier;
+    }
+}
+
+class Resistance
+{
+    public $energyType;
+    public $value;
+
+    public function __construct($energyType, $value)
+    {
+        $this->energyType = $energyType;
+        $this->value = $value;
+    }
+}
+?>
