@@ -1,41 +1,51 @@
 <?php
 
-require 'Pokemon.php';
+require_once 'Pokemon.php';
+require_once 'Attack.php';
+require_once 'Weakness.php';
+require_once 'Resistance.php';
+require_once 'EnergyType.php';
 
-function printPokemonStats($pokemon)
-{
-    echo "Name: " . $pokemon->name . "<br>";
-    echo "Health: " . $pokemon->health . "/" . $pokemon->hitpoints . "<br>";
-    echo "Weakness: " . $pokemon->weakness->energyType . " " . $pokemon->weakness->multiplier . "<br>";
-    echo "Resistance: " . $pokemon->resistance->energyType . " " . $pokemon->resistance->value . "<br>";
+$pikachu = new Pokemon(
+    'Pikachu',
+    new EnergyType('Lightning'),
+    60,
+    [
+        new Attack('Electric Ring', 50),
+        new Attack('Pika Punch', 20)
+    ],
+    new Weakness(new EnergyType('Fire'), 1.5),
+    new Resistance(new EnergyType('Fighting'), 20)
+);
+
+$charmeleon = new Pokemon(
+    'Charmeleon',
+    new EnergyType('Fire'),
+    60,
+    [
+        new Attack('Head Butt', 10),
+        new Attack('Flare', 30)
+    ],
+    new Weakness(new EnergyType('Water'), 2),
+    new Resistance(new EnergyType('Lightning'), 10)
+);
+
+$pokemons = [$pikachu, $charmeleon];
+
+foreach ($pokemons as $pokemon) {
+    echo "Name: {$pokemon->name}<br>";
+    echo "Health: {$pokemon->hitPoints}/60<br>";
+    echo "Weakness: {$pokemon->weakness->energyType->type} {$pokemon->weakness->multiplier}<br>";
+    echo "Resistance: {$pokemon->resistance->energyType->type} {$pokemon->resistance->value}<br>";
     echo "Attack(s): ";
-    foreach ($pokemon->attacks as $attack)
-    {
-        echo $attack->name . " " . $attack->damage . ", ";
+    foreach ($pokemon->attacks as $attack) {
+        echo "{$attack->name} {$attack->damage}, ";
     }
     echo "<br><br>";
 }
 
-$pikachu = new Pokemon("Pikachu", "Lightning", 60,
-    [new Attack("Electric Ring", 50), new Attack("Pika Punch", 20)],
-    new Weakness("Fire", 1.5), new Resistance("Fighting", 20)
-);
-$charmeleon = new Pokemon("Charmeleon", "Fire", 60,
-    [new Attack("Head Butt", 10), new Attack("Flare", 30)],
-    new Weakness("Water", 2), new Resistance("Lightning", 10)
-);
-
-printPokemonStats($pikachu);
-printPokemonStats($charmeleon);
-
 $pikachu->attack($charmeleon, $pikachu->attacks[0]);
-echo "Pikachu attacked Charmeleon and dealt " . $pikachu->attacks[0]->damage . " damage<br>";
-echo "Charmeleon has " . $charmeleon->health . " health left<br><br>";
-
 $charmeleon->attack($pikachu, $charmeleon->attacks[0]);
-echo "Charmeleon attacked Pikachu and dealt " . $charmeleon->attacks[0]->damage . " damage<br>";
-echo "Pikachu has " . $pikachu->health . " health left<br><br>";
 
-echo "Number of pokemons alive: " . Pokemon::getPopulation();
-
+echo "Number of pokemons alive: " . Pokemon::alivePokemons($pokemons) . "<br>";
 ?>

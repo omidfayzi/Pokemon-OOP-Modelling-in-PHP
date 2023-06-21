@@ -1,87 +1,50 @@
 <?php
 
-class Pokemon
-{
-    public static $population = 0;
-    public static $livingPokemon = [];
+class Pokemon {
+    private static $pokemonCount = 0;
+
     public $name;
     public $energyType;
-    public $hitpoints;
-    public $health;
+    public $hitPoints;
     public $attacks;
     public $weakness;
     public $resistance;
 
-    public function __construct($name, $energyType, $hitpoints, $attacks, $weakness, $resistance)
+    public function __construct($name, $energyType, $hitPoints, $attacks, $weakness, $resistance)
     {
         $this->name = $name;
         $this->energyType = $energyType;
-        $this->hitpoints = $hitpoints;
-        $this->health = $hitpoints;
+        $this->hitPoints = $hitPoints;
         $this->attacks = $attacks;
         $this->weakness = $weakness;
         $this->resistance = $resistance;
-        Pokemon::$population += 1;
-        array_push(Pokemon::$livingPokemon, $this);
+        self::$pokemonCount++;
     }
 
-    public function attack($target, $attack)
-    {
+    public function attack($target, $attack) {
         $damage = $attack->damage;
-        if ($target->weakness->energyType == $this->energyType)
-        {
+
+        if ($target->weakness->energyType == $this->energyType) {
             $damage *= $target->weakness->multiplier;
         }
-        if ($target->resistance->energyType == $this->energyType)
-        {
+
+        if ($target->resistance->energyType == $this->energyType) {
             $damage -= $target->resistance->value;
         }
-        $target->health -= $damage;
-        if ($target->health <= 0)
-        {
-            Pokemon::$population -= 1;
+
+        $target->hitPoints = max(0, $target->hitPoints - $damage);
+        echo "{$this->name} attacked {$target->name} with {$attack->name} and dealt {$damage} damage.<br>";
+        echo "{$target->name} has {$target->hitPoints} health left.<br><br>";
+    }
+
+    public static function alivePokemons($pokemons) {
+        $aliveCount = 0;
+        foreach($pokemons as $pokemon) {
+            if($pokemon->hitPoints > 0) {
+                $aliveCount++;
+            }
         }
-    }
-
-    public static function getPopulation()
-    {
-        return Pokemon::$population;
-    }
-}
-
-class Attack
-{
-    public $name;
-    public $damage;
-
-    public function __construct($name, $damage)
-    {
-        $this->name = $name;
-        $this->damage = $damage;
-    }
-}
-
-class Weakness
-{
-    public $energyType;
-    public $multiplier;
-
-    public function __construct($energyType, $multiplier)
-    {
-        $this->energyType = $energyType;
-        $this->multiplier = $multiplier;
-    }
-}
-
-class Resistance
-{
-    public $energyType;
-    public $value;
-
-    public function __construct($energyType, $value)
-    {
-        $this->energyType = $energyType;
-        $this->value = $value;
+        return $aliveCount;
     }
 }
 ?>
