@@ -44,8 +44,12 @@ foreach ($pokemons as $pokemon) {
     echo "<br><br>";
 }
 
-$pikachu->attack($charmeleon, $pikachu->attacks[0]);
-$charmeleon->attack($pikachu, $charmeleon->attacks[0]);
+$pikachuAttack = $pikachu->attacks[0]; // Choosing Electric Ring attack
+$charmeleonAttack = $charmeleon->attacks[0]; // Choosing Head Butt attack
 
-echo "Number of pokemons alive: " . Pokemon::alivePokemons($pokemons) . "<br>";
+$pikachu->Attack($charmeleon, $pikachuAttack);
+$charmeleon->Attack($pikachu, $charmeleonAttack);
+
+echo "<br>Number of pokemons alive: " . Pokemon::getAlivePokemons();
+
 ?>

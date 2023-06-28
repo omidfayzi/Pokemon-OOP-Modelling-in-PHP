@@ -1,8 +1,8 @@
 <?php
 
-class Pokemon {
-    private static $pokemonCount = 0;
-
+class Pokemon
+{
+    public static $numberOfPokemons = 0;
     public $name;
     public $energyType;
     public $hitPoints;
@@ -18,33 +18,43 @@ class Pokemon {
         $this->attacks = $attacks;
         $this->weakness = $weakness;
         $this->resistance = $resistance;
-        self::$pokemonCount++;
+
+        self::$numberOfPokemons++;
     }
 
-    public function attack($target, $attack) {
-        $damage = $attack->damage;
+    public function Attack($target, $attack) 
+    {
+        $damage = $attack->getDamage();
 
-        if ($target->weakness->energyType == $this->energyType) {
+        // Check if target is weak against attacker's type
+        if($this->energyType->type === $target->weakness->energyType->type)
+        {
             $damage *= $target->weakness->multiplier;
         }
-
-        if ($target->resistance->energyType == $this->energyType) {
+        // Check if target has resistance against attacker's type
+        else if($this->energyType->type === $target->resistance->energyType->type)
+        {
             $damage -= $target->resistance->value;
+            $damage = ($damage < 0) ? 0 : $damage; // Prevents negative damage
         }
 
-        $target->hitPoints = max(0, $target->hitPoints - $damage);
+        $target->hitPoints -= $damage;
+
         echo "{$this->name} attacked {$target->name} with {$attack->name} and dealt {$damage} damage.<br>";
-        echo "{$target->name} has {$target->hitPoints} health left.<br><br>";
+        
+        if($target->hitPoints <= 0) 
+        {
+            echo "{$target->name} is knocked out.<br>";
+            self::$numberOfPokemons--;
+        }
+        else
+        {
+            echo "{$target->name} has {$target->hitPoints} health left.<br>";
+        }
     }
 
-    public static function alivePokemons($pokemons) {
-        $aliveCount = 0;
-        foreach($pokemons as $pokemon) {
-            if($pokemon->hitPoints > 0) {
-                $aliveCount++;
-            }
-        }
-        return $aliveCount;
+    public static function getAlivePokemons()
+    {
+        return self::$numberOfPokemons;
     }
 }
-?>

@@ -1,10 +1,11 @@
 <?php
 
-class EnergyType {
+class EnergyType
+{
     public $type;
 
-    public function __construct($type) {
+    public function __construct($type)
+    {
         $this->type = $type;
     }
 }
-?>
